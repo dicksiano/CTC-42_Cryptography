@@ -1,11 +1,12 @@
 import random
 import utils
+import decimal 
 
 def generateTrash(initialPos, msgSize):
 	trash1 = ''
 	trash2 = ''
 
-	for x in range(initialPos - 1):
+	for x in range(initialPos):
 		trash1 += chr(random.randint(0,255))
 	for x in range(initialPos + msgSize, utils.MESSAGE_SIZE):
 		trash2 += chr(random.randint(0,255))
@@ -13,7 +14,7 @@ def generateTrash(initialPos, msgSize):
 	return [trash1, trash2]
 
 [trashA, trashB] = generateTrash(8990,1000)
-assert len(trashA) == 8989
+assert len(trashA) == 8990
 assert len(trashB) == 10
 
 def addInfo(first, second, x, size, position):
@@ -64,6 +65,11 @@ def addInformationInsideTrash(firstTrash, secondTrash, initialPos, msgSize, key,
 	[firstTrash, secondTrash] = addInfoInitPosKey(firstTrash, secondTrash, initialPosKey)
 	return [firstTrash, secondTrash]
 
+def generateFinalKey(key, initialPosKey, keySize):
+	key = decimal.Decimal(key)
+	key = str(key.sqrt()).split('.')[1]
+	return key[initialPosKey:(initialPosKey+keySize)]
+
 def encode(plainText, key):
 	encriptedMsg = ''
 	for c, i in zip(plainText, key):
@@ -75,9 +81,8 @@ assert encode("abc", "205") == "cbh"
 
 def encoder(plainText, initialPos, key, initialKeyPos):
 	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
-		# Key deveria ser string para, mas deveríamos passar o número do n-ésimo primo?
 	[firstTrash, secondTrash] = addInformationInsideTrash(firstTrash, secondTrash, initialPos, len(plainText), key, initialKeyPos)
-
+	key = generateFinalKey(utils.primeNumbers[key], initialKeyPos, len(plainText))
 	return (firstTrash + encode(plainText, key) + secondTrash)
 
-print(encoder("encryptedmessage", 65,0,10))
+# str = encoder("encryptedmessage", 65,0,10)

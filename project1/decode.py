@@ -53,6 +53,7 @@ assert getEncriptedMsg("q393asasdcnjanaaussafasufdicksianoasasnfjanjas", 25, 9) 
 def decode(encriptedMsg, key):
 	decriptedMsg = ''
 	for c, i in zip(encriptedMsg, key):
+		print(i, ord(c), int(i), ord(c)-int(i))
 		decriptedMsg += chr( (ord(c) - int(i))%256 )
 	
 	return decriptedMsg
