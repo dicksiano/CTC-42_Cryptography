@@ -57,12 +57,12 @@ def addInfoKey(first, second, key):
 def addInfoInitPosKey(first, second, initialPosKey):
 	return addInfo(first, second, initialPosKey, utils.NUM_BITS_KEY_INITIAL_POS/2, 3)
 
-def encode(plainText, initialPos, key, initialKeyPos):
-	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
-
-	[firstTrash, secondTrash] = addInformationInsideTrash(firstTrash, secondTrash, initialPos, len(plainText), key, initialPos)
-
-	return (firstTrash + encode(plainText, key) + secondTrash)
+def addInformationInsideTrash(firstTrash, secondTrash, initialPos, msgSize, key, initialPosKey):
+	[firstTrash, secondTrash] = addInfoInitPos(firstTrash, secondTrash, initialPos)
+	[firstTrash, secondTrash] = addInfoMsgSize(firstTrash, secondTrash, msgSize)
+	[firstTrash, secondTrash] = addInfoKey(firstTrash, secondTrash, key)
+	[firstTrash, secondTrash] = addInfoInitPosKey(firstTrash, secondTrash, initialPosKey)
+	return [firstTrash, secondTrash]
 
 def encode(plainText, key):
 	encriptedMsg = ''
@@ -72,3 +72,12 @@ def encode(plainText, key):
 	return encriptedMsg
 
 assert encode("abc", "205") == "cbh"
+
+def encoder(plainText, initialPos, key, initialKeyPos):
+	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
+		# Key deveria ser string para, mas deveríamos passar o número do n-ésimo primo?
+	[firstTrash, secondTrash] = addInformationInsideTrash(firstTrash, secondTrash, initialPos, len(plainText), key, initialKeyPos)
+
+	return (firstTrash + encode(plainText, key) + secondTrash)
+
+print(encoder("encryptedmessage", 65,0,10))
