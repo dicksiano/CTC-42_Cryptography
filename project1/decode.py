@@ -1,6 +1,7 @@
 import sys
 import math
 import decimal
+import utils
 from utils import fibonacciNumbers, getBit, primeNumbers
 
 context = decimal.Context(prec=1001)
@@ -22,27 +23,27 @@ assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,2) == 2340
 assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,3) == 780
 
 def getInitialPos(msg):
-	return getSecretNum(msg, utils.NUM_BITS_INITIAL_POS/2, 0)
+	return getSecretNum(msg, int(utils.NUM_BITS_INITIAL_POS/2), 0)
 
 def getMsgSize(msg):
-	return getSecretNum(msg, utils.NUM_BITS_MSG_SIZE/2, 1)
+	return getSecretNum(msg, int(utils.NUM_BITS_MSG_SIZE/2), 1)
 
 def getKey(msg):
-	return primeNumbers[getSecretNum(msg, utils.NUM_BITS_KEY/2, 2)]
+	return primeNumbers[getSecretNum(msg, int(utils.NUM_BITS_KEY/2), 2)]
 
 def getInitilPosKey(msg):
-	return getSecretNum(msg, utils.NUM_BITS_KEY_INITIAL_POS/2, 3)
+	return getSecretNum(msg, int(utils.NUM_BITS_KEY_INITIAL_POS/2), 3)
 
 def getParams(msg): 
 	return [getInitialPos(msg), getMsgSize(msg), getKey(msg), getInitilPosKey(msg)]
 
 def generateFinalKey(key, initialPosKey, keySize):
-	key = decimal.Decimal(key) # Read key
+	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
 	return key[initialPosKey:(initialPosKey+keySize)]
 
-# assert generateFinalKey(1,2,2) == "42"	AJEITAR 
-# assert generateFinalKey(0,0,5) == "77245" AJEITAR
+assert generateFinalKey(primeNumbers[1],2,2) == "42" 
+assert generateFinalKey(primeNumbers[0],0,5) == "77245"
 
 def getEncriptedMsg(msg, initialPos, msgSize):
 	return msg[initialPos:(initialPos+msgSize)]
@@ -56,7 +57,7 @@ def decode(encriptedMsg, key):
 	
 	return decriptedMsg
 
-# assert decode("cbh", "205") == "abc"
+assert decode("cbh", "205") == "abc"
 
 def decoder(msg):
 	[initialPos, msgSize, key, initilPosKey] = getParams(msg)
