@@ -22,16 +22,16 @@ assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,2) == 2340
 assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,3) == 780
 
 def getInitialPos(msg):
-	return getSecretNum(msg, 7, 0)
+	return getSecretNum(msg, utils.NUM_BITS_INITIAL_POS/2, 0)
 
 def getMsgSize(msg):
-	return getSecretNum(msg, 5, 1)
+	return getSecretNum(msg, utils.NUM_BITS_MSG_SIZE/2, 1)
 
 def getKey(msg):
-	return primeNumbers[getSecretNum(msg, 5, 2)]
+	return primeNumbers[getSecretNum(msg, utils.NUM_BITS_KEY/2, 2)]
 
 def getInitilPosKey(msg):
-	return getSecretNum(msg, 10, 3)
+	return getSecretNum(msg, utils.NUM_BITS_KEY_INITIAL_POS/2, 3)
 
 def getParams(msg): 
 	return [getInitialPos(msg), getMsgSize(msg), getKey(msg), getInitilPosKey(msg)]

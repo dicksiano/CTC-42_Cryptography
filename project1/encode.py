@@ -1,30 +1,68 @@
-import sys
-import math
-import decimal
 import random
+import utils
 
-context = decimal.Context(prec=1001001)
-decimal.setcontext(context)
-
-def generateFirstTrash(initialPos):
-	trash = ''
+def generateTrash(initialPos, msgSize):
+	trash1 = ''
+	trash2 = ''
 
 	for x in range(initialPos - 1):
-		trash += chr(random.randint(0,255))
+		trash1 += chr(random.randint(0,255))
+	for x in range(initialPos + msgSize, utils.MESSAGE_SIZE):
+		trash2 += chr(random.randint(0,255))
 
-	return trash
+	return [trash1, trash2]
 
-assert len(generateFirstTrash(5)) == 4
+[trashA, trashB] = generateTrash(8990,1000)
+assert len(trashA) == 8989
+assert len(trashB) == 10
 
-def generateSecondTrash(initialPos, msgSize):
-	trash = ''
+def addInfo(first, second, x, size, position):
 
-	for x in range(initialPos + msgSize, 10000):
-		trash += chr(random.randint(0,255))
+	first = list(first)
+	second = list(second)
 
-	return trash
+	for i in range(int(size)):
+		# change letter in first trash
+		num = ord(first[ utils.fibonacciNumbers[i] ]) # current char
+		bit = utils.getBit(x, i) # the bit of info x is '0' or '1'
+		first[ utils.fibonacciNumbers[i] ] = chr(utils.changeBit(num, bit, position)) # set the 'bit'
 
-assert len(generateSecondTrash(8990, 1000)) == 10
+		# change letter in second trash
+		num = ord(second[ len(second) -1 - utils.fibonacciNumbers[i] ]) # current char
+		bit = utils.getBit(x, i + int(size)) # the bit of info x is '0' or '1'
+		second[ len(second) -1 - utils.fibonacciNumbers[i] ] = chr(utils.changeBit(num, bit, position)) # set the 'bit'
+
+	return [''.join(first), ''.join(second)]
+
+[a,b] = addInfo("dddd", "xxxx", 0b10011001, 4, 0)
+assert a == "edde"
+assert b == "yxxy"
+
+def addInfoInitPos(first, second, initialPos):
+	return addInfo(first, second, initialPos, utils.NUM_BITS_INITIAL_POS/2, 0)
+
+[a,b] = addInfoInitPos("dddddddddddddd", "xxxxxxxxxxxxxx", 0b11111111111111)
+assert a == "eeeededdedddde"
+assert b == "yxxxxyxxyxyyyy"
+[a,b] = addInfoInitPos("gggggggggggggg", "xxxxxxxxxxxxxx", 0)
+assert a == "ffffgfggfggggf"
+assert b == "xxxxxxxxxxxxxx"
+																
+def addInfoMsgSize(first, second, msgSize):
+	return addInfo(first, second, msgSize, utils.NUM_BITS_MSG_SIZE/2, 1)
+
+def addInfoKey(first, second, key):
+	return addInfo(first, second, key, utils.NUM_BITS_KEY/2, 2)
+
+def addInfoInitPosKey(first, second, initialPosKey):
+	return addInfo(first, second, initialPosKey, utils.NUM_BITS_KEY_INITIAL_POS/2, 3)
+
+def encode(plainText, initialPos, key, initialKeyPos):
+	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
+
+	[firstTrash, secondTrash] = addInformationInsideTrash(firstTrash, secondTrash, initialPos, len(plainText), key, initialPos)
+
+	return (firstTrash + encode(plainText, key) + secondTrash)
 
 def encode(plainText, key):
 	encriptedMsg = ''

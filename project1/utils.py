@@ -29,7 +29,12 @@ primeNumbers = [math.pi,2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,
 3581,3583,3593,3607,3613,3617,3623,3631,3637,3643,3659,3671,3673,3677,3691,3697,3701,3709,3719,3727]
 
 MESSAGE_SIZE = 10000
+NUM_BITS_INITIAL_POS = 14
+NUM_BITS_MSG_SIZE = 10
+NUM_BITS_KEY = 10
+NUM_BITS_KEY_INITIAL_POS = 20
 
+# Get the xth bit of the number n
 def getBit(n, x):
 	if (n & (1 << x)):
 		return 1
@@ -44,3 +49,9 @@ assert getBit(1, 1) == 0
 assert getBit(2, 2) == 0
 assert getBit(4, 3) == 0
 
+# Turn the positionth bit into the value of parameter 'bit' in the the number 'num'
+def changeBit(num, bit, position):
+	if(bit):
+		return (num | (1 << position))
+	else:
+		return(num & ~(1 << position))
