@@ -17,6 +17,9 @@ def getSecretNum(msg, n, x):
 	return answer
 		
 assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,0) == 2535
+assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,1) == 3380
+assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,2) == 2340
+assert getSecretNum("aaox@r@@w@@@@w@@r@xoaa",6,3) == 780
 
 def getInitialPos(msg):
 	return getSecretNum(msg, 7, 0)
@@ -37,7 +40,7 @@ def generateFinalKey(key, initialPosKey, keySize):
 	key = decimal.Decimal(primeNumbers[key]) # Read key
 	key = str(key.sqrt()).split('.')[1]
 	return key[initialPosKey:(initialPosKey+keySize)]
-	
+
 assert generateFinalKey(1,2,2) == "42"
 assert generateFinalKey(0,0,5) == "77245"
 
