@@ -37,7 +37,7 @@ def getParams(msg):
 	return [getInitialPos(msg), getMsgSize(msg), getKey(msg), getInitilPosKey(msg)]
 
 def generateFinalKey(key, initialPosKey, keySize):
-	key = decimal.Decimal(primeNumbers[key]) # Read key
+	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
 	return key[initialPosKey:(initialPosKey+keySize)]
 
