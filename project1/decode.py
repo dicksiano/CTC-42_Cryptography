@@ -4,8 +4,9 @@ import decimal
 import utils
 from utils import fibonacciNumbers, getBit, primeNumbers
 
-context = decimal.Context(prec=1001)
-decimal.setcontext(context)
+def decimalPrecision(precision):
+	context = decimal.Context(precision)
+	decimal.setcontext(context)
 
 def getSecretNum(msg, n, x):
 	answer = 0
@@ -38,6 +39,7 @@ def getParams(msg):
 	return [getInitialPos(msg), getMsgSize(msg), getKey(msg), getInitilPosKey(msg)]
 
 def generateFinalKey(key, initialPosKey, keySize):
+	decimalPrecision(initialPosKey+keySize+2)
 	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
 	return key[initialPosKey:(initialPosKey+keySize)]
@@ -53,7 +55,6 @@ assert getEncriptedMsg("q393asasdcnjanaaussafasufdicksianoasasnfjanjas", 25, 9) 
 def decode(encriptedMsg, key):
 	decriptedMsg = ''
 	for c, i in zip(encriptedMsg, key):
-		print(i, ord(c), int(i), ord(c)-int(i))
 		decriptedMsg += chr( (ord(c) - int(i))%256 )
 	
 	return decriptedMsg

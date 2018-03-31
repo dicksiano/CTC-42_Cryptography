@@ -2,6 +2,10 @@ import random
 import utils
 import decimal 
 
+def decimalPrecision(precision):
+	context = decimal.Context(precision)
+	decimal.setcontext(context)
+
 def generateTrash(initialPos, msgSize):
 	trash1 = ''
 	trash2 = ''
@@ -66,6 +70,7 @@ def addInformationInsideTrash(firstTrash, secondTrash, initialPos, msgSize, key,
 	return [firstTrash, secondTrash]
 
 def generateFinalKey(key, initialPosKey, keySize):
+	decimalPrecision(initialPosKey+keySize+2)
 	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
 	return key[initialPosKey:(initialPosKey+keySize)]
