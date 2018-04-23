@@ -55,11 +55,13 @@ assert getEncriptedMsg("q393asasdcnjanaaussafasufdicksianoasasnfjanjas", 25, 9) 
 def decode(encriptedMsg, key):
 	decriptedMsg = ''
 	for c, i in zip(encriptedMsg, key):
-		decriptedMsg += chr( (ord(c) - int(i))%256 )
+		pos = key.index(i)
+		str = key[pos:pos+3]
+		decriptedMsg += chr( (ord(c) - int(str))%256 )
 	
 	return decriptedMsg
 
-assert decode("cbh", "205") == "abc"
+assert decode(".gh", "205") == "abc"
 
 def decoder(msg):
 	[initialPos, msgSize, key, initilPosKey] = getParams(msg)
@@ -68,20 +70,21 @@ def decoder(msg):
 
 	return decode(encriptedMsg, key)
 
-fT = [209,88,192,120,98,16,145,16,32,64]
-lT = [128,64,32,16,32,64,128,64,32,16]
-le = chr(fT[0])+chr(fT[1])+chr(fT[2])+chr(fT[3])+"a"+chr(fT[4])+\
-	 "aa"+chr(fT[5])+"aaaa"+chr(fT[6])+"aaaaaaa"+chr(fT[7])+"aaaaaaaaaaaa"+\
-	 chr(fT[8])+"aaaaaaaaaaaaaaaaaaaa"+chr(fT[9])
-ld = chr(fT[9])+"aaaaaaaaaaaaaaaaaaaa"+chr(fT[8])+"aaaaaaaaaaaa"+\
-	 chr(lT[7])+"aaaaaaa"+chr(lT[6])+"aaaa"+chr(lT[5])+"aa"+\
-	 chr(lT[4])+"a"+chr(lT[3])+chr(lT[2])+chr(lT[1])+chr(lT[0])
-la = "444444444"
-lde = "asjhladjbkcalfjdblas"
-em = "eshs~y}gkrfxtjhe"
-encr = le+la+em+lde+ld
+# Test considering the key sum one number by one number, now changed to sum by 3 and 3 numbers
+# fT = [209,88,192,120,98,16,145,16,32,64]
+# lT = [128,64,32,16,32,64,128,64,32,16]
+# le = chr(fT[0])+chr(fT[1])+chr(fT[2])+chr(fT[3])+"a"+chr(fT[4])+\
+# 	 "aa"+chr(fT[5])+"aaaa"+chr(fT[6])+"aaaaaaa"+chr(fT[7])+"aaaaaaaaaaaa"+\
+# 	 chr(fT[8])+"aaaaaaaaaaaaaaaaaaaa"+chr(fT[9])
+# ld = chr(fT[9])+"aaaaaaaaaaaaaaaaaaaa"+chr(fT[8])+"aaaaaaaaaaaa"+\
+# 	 chr(lT[7])+"aaaaaaa"+chr(lT[6])+"aaaa"+chr(lT[5])+"aa"+\
+# 	 chr(lT[4])+"a"+chr(lT[3])+chr(lT[2])+chr(lT[1])+chr(lT[0])
+# la = "444444444"
+# lde = "asjhladjbkcalfjdblas"
+# em = "eshs~y}gkrfxtjhe"
+# encr = le+la+em+lde+ld
 
-assert decoder(le+la+em+lde+ld) == "encryptedmessage"
+# assert decoder(le+la+em+lde+ld) == "encryptedmessage"
 
 	
 

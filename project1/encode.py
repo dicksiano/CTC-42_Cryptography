@@ -78,11 +78,13 @@ def generateFinalKey(key, initialPosKey, keySize):
 def encode(plainText, key):
 	encriptedMsg = ''
 	for c, i in zip(plainText, key):
-		encriptedMsg += chr( (ord(c) + int(i))%256 )
+		pos = key.index(i)
+		str = key[pos:pos+3]
+		encriptedMsg += chr( (ord(c) + int(str))%256 )
 
 	return encriptedMsg
 
-assert encode("abc", "205") == "cbh"
+assert encode("abc", "205") == ".gh"
 
 def encoder(plainText, initialPos, key, initialKeyPos):
 	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
