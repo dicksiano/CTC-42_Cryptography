@@ -39,13 +39,14 @@ def getParams(msg):
 	return [getInitialPos(msg), getMsgSize(msg), getKey(msg), getInitilPosKey(msg)]
 
 def generateFinalKey(key, initialPosKey, keySize):
-	decimalPrecision(initialPosKey+keySize+2)
+	decimalPrecision(initialPosKey+keySize*3+2)
 	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
-	return key[initialPosKey:(initialPosKey+keySize)]
+	# return key[initialPosKey:(initialPosKey+keySize)]
+	return key[initialPosKey:(initialPosKey+keySize*3)]
 
-assert generateFinalKey(primeNumbers[1],2,2) == "42" 
-assert generateFinalKey(primeNumbers[0],0,5) == "77245"
+# assert generateFinalKey(primeNumbers[1],2,2) == "42" 
+# assert generateFinalKey(primeNumbers[0],0,5) == "77245"
 
 def getEncriptedMsg(msg, initialPos, msgSize):
 	return msg[initialPos:(initialPos+msgSize)]
@@ -54,14 +55,17 @@ assert getEncriptedMsg("q393asasdcnjanaaussafasufdicksianoasasnfjanjas", 25, 9) 
 
 def decode(encriptedMsg, key):
 	decriptedMsg = ''
-	for c, i in zip(encriptedMsg, key):
-		pos = key.index(i)
+	# for c, i in zip(encriptedMsg, key):
+	pos = 0
+	for c in encriptedMsg:
+		# pos = key.index(i)
 		str = key[pos:pos+3]
 		decriptedMsg += chr( (ord(c) - int(str))%256 )
-	
+		pos += 3
+
 	return decriptedMsg
 
-assert decode(".gh", "205") == "abc"
+assert decode(".gh", "205005005") == "abc"
 
 def decoder(msg):
 	[initialPos, msgSize, key, initilPosKey] = getParams(msg)
