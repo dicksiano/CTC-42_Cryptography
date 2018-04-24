@@ -90,10 +90,22 @@ def encode(plainText, key):
 
 # assert encode("abc", "205005005") == ".gh"
 
-def encoder(plainText, initialPos, key, initialKeyPos):
+def innerEncoder(plainText, initialPos, key, initialKeyPos):
 	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
 	[firstTrash, secondTrash] = addInformationInsideTrash(firstTrash, secondTrash, initialPos, len(plainText), key, initialKeyPos)
 	key = generateFinalKey(utils.primeNumbers[key], initialKeyPos, len(plainText))
-	return (firstTrash + encode(plainText, key) + secondTrash)
+	encodedText = encode(plainText, key)
+
+	## AQUI RIVA
+	f1 = open(plainText + '.txt', 'wb')
+	f1.write(encodedText.encode('utf8'))
+	return (firstTrash + encodedText + secondTrash)
 
 # str = encoder("encryptedmessage", 65,0,10)
+
+def encoder(plainText):
+	initialPos = random.randint(55,10000-55-len(plainText))
+	key = random.randint(0,500)
+	initialKeyPos = random.randint(0,100000)
+
+	return innerEncoder(plainText, initialPos, key, initialKeyPos)
