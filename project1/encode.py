@@ -1,6 +1,6 @@
 import random
 import utils
-import decimal 
+import decimal
 
 def decimalPrecision(precision):
 	context = decimal.Context(precision)
@@ -52,7 +52,7 @@ assert b == "yxxxxyxxyxyyyy"
 [a,b] = addInfoInitPos("gggggggggggggg", "xxxxxxxxxxxxxx", 0)
 assert a == "ffffgfggfggggf"
 assert b == "xxxxxxxxxxxxxx"
-																
+
 def addInfoMsgSize(first, second, msgSize):
 	return addInfo(first, second, msgSize, utils.NUM_BITS_MSG_SIZE/2, 1)
 
@@ -70,19 +70,25 @@ def addInformationInsideTrash(firstTrash, secondTrash, initialPos, msgSize, key,
 	return [firstTrash, secondTrash]
 
 def generateFinalKey(key, initialPosKey, keySize):
-	decimalPrecision(initialPosKey+keySize+2)
+	decimalPrecision(initialPosKey+keySize*3+2)
 	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
-	return key[initialPosKey:(initialPosKey+keySize)]
+	# return key[initialPosKey:(initialPosKey+keySize)]
+	return key[initialPosKey:(initialPosKey+keySize*3)]
 
 def encode(plainText, key):
 	encriptedMsg = ''
-	for c, i in zip(plainText, key):
-		encriptedMsg += chr( (ord(c) + int(i))%256 )
+	pos = 0
+	# for c, i in zip(plainText, key):
+	for c in plainText:
+		# pos = key.index(i)
+		str = key[pos:pos+3]
+		encriptedMsg += chr( (ord(c) + int(str))%256 )
+		pos += 3
 
 	return encriptedMsg
 
-assert encode("abc", "205") == "cbh"
+# assert encode("abc", "205005005") == ".gh"
 
 def encoder(plainText, initialPos, key, initialKeyPos):
 	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
