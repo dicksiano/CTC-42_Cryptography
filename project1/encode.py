@@ -70,24 +70,42 @@ def addInformationInsideTrash(firstTrash, secondTrash, initialPos, msgSize, key,
 	return [firstTrash, secondTrash]
 
 def generateFinalKey(key, initialPosKey, keySize):
-	decimalPrecision(initialPosKey+keySize+2)
+	decimalPrecision(initialPosKey+keySize*3+2)
 	key = decimal.Decimal(key)
 	key = str(key.sqrt()).split('.')[1]
-	return key[initialPosKey:(initialPosKey+keySize)]
+	# return key[initialPosKey:(initialPosKey+keySize)]
+	return key[initialPosKey:(initialPosKey+keySize*3)]
 
 def encode(plainText, key):
 	encriptedMsg = ''
-	for c, i in zip(plainText, key):
-		encriptedMsg += chr( (ord(c) + int(i))%256 )
+	pos = 0
+	# for c, i in zip(plainText, key):
+	for c in plainText:
+		# pos = key.index(i)
+		str = key[pos:pos+3]
+		encriptedMsg += chr( (ord(c) + int(str))%256 )
+		pos += 3
 
 	return encriptedMsg
 
-assert encode("abc", "205") == "cbh"
+# assert encode("abc", "205005005") == ".gh"
 
-def encoder(plainText, initialPos, key, initialKeyPos):
+def innerEncoder(plainText, initialPos, key, initialKeyPos):
 	[firstTrash, secondTrash] = generateTrash(initialPos, len(plainText))
 	[firstTrash, secondTrash] = addInformationInsideTrash(firstTrash, secondTrash, initialPos, len(plainText), key, initialKeyPos)
 	key = generateFinalKey(utils.primeNumbers[key], initialKeyPos, len(plainText))
-	return (firstTrash + encode(plainText, key) + secondTrash)
+	encodedText = encode(plainText, key)
+
+	## AQUI RIVA
+	f1 = open(plainText + '.txt', 'wb')
+	f1.write(encodedText.encode('utf8'))
+	return (firstTrash + encodedText + secondTrash)
 
 # str = encoder("encryptedmessage", 65,0,10)
+
+def encoder(plainText):
+	initialPos = random.randint(55,10000-55-len(plainText))
+	key = random.randint(0,500)
+	initialKeyPos = random.randint(0,100000)
+
+	return innerEncoder(plainText, initialPos, key, initialKeyPos)
