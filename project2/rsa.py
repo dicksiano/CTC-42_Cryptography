@@ -1,7 +1,6 @@
 import Crypto # pip install rsa for Python2
 from Crypto import Random
 from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
 import ast
 import hashlib
 
