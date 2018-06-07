@@ -8,7 +8,7 @@ random_generator = Random.new().read
 key = RSA.generate(1024, random_generator)
 
 # Alice encrypts the message and sends the message and its hash to Bob
-text = 'Dicks iano'
+text = 'Dicksiano'
 hash_text = hashlib.sha512(text).hexdigest()
 print("SHA512: ")
 print(hash_text)
