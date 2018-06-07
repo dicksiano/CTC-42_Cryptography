@@ -78,6 +78,10 @@ assert mult_inverse(3, 7) == 5
 def generate_key(N=10**10):
     p = random_prime(N)
     q = random_prime(N)
+
+    while p == q:
+        q = random_prime(N)
+
     n = p * q
     phi = (p-1) * (q-1) # Euler Function
 
@@ -95,13 +99,16 @@ def generate_key(N=10**10):
 
 def encode(msg, public_key):
     batch_size = int(math.log(public_key.modulus, 256))
-    binary_msg = msg.encode()
+    binary_msg = b64encode(msg.encode())
     result = []
 
     for start in range(0, len(binary_msg), batch_size):
         batch = binary_msg[start : start + batch_size]
         plain = 0
+
+        print(batch)
         for byte in reversed(batch):
+            print(byte)
             plain *= 2**8 # plain << 8
             plain += byte
         
